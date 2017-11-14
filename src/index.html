@@ -9,23 +9,26 @@
 <body>
 <div class="col-md-2"></div>
 <div class="col-md-8">
-    <div class="panel panel-success">
+    <div class="panel panel-primary">
         <div class="panel-heading">
-            Todo List for Serega
+            <h2 class="text-center">Todo List for Serega</h2>
         </div>
 
         <div class="panel-body">
             <div class="form-group">
                 <input id="text" class="form-control" placeholder="Enter text...">
             </div>
-            <button id="add" class="btn btn-primary">Add</button>
-            <button id="clear" class="btn btn-warning">Clear</button>
+            <div class="pull-right">
+                <button id="add" class="btn btn-primary">Add</button>
+                <button id="clear" class="btn btn-warning">Clear</button>
+            </div>
         </div>
 
         <ul id="list" class="list-group"></ul>
     </div>
 </div>
 <div class="col-md-2"></div>
+<script src="js/modules/constants.module.js"></script>
 <script src="js/modules/dom.builder.module.js"></script>
 <script src="js/index.js"></script>
 </body>

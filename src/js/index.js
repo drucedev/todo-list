@@ -2,6 +2,6 @@
     window.onload = initTodoList;
 
     function initTodoList() {
-        domBuilderModule.initControls();
+        domBuilderModule.init();
     }
 })();

@@ -1,52 +1,81 @@
 var domBuilderModule = (function () {
-    var add, clear, text, ul;
+    var addBtn, clearBtn, textField, todoList;
+    var data;
+
+    function init() {
+        initControls();
+        initListeners();
+        initData();
+        initTodoList();
+    }
 
     function initControls() {
-        add = document.getElementById('add');
-        clear = document.getElementById('clear');
-        text = document.getElementById('text');
-        ul = document.getElementById('list');
+        addBtn = document.getElementById(addId);
+        clearBtn = document.getElementById(clearId);
+        textField = document.getElementById(textId);
+        todoList = document.getElementById(listId);
+    }
 
-        add.addEventListener('click', checkText);
+    function initListeners() {
+        addBtn.addEventListener(eventTypeClick, addTodoItemListener);
+        clearBtn.addEventListener(eventTypeClick, clearTextListener);
+        todoList.addEventListener(eventTypeClick, removeTodoItemListener);
+    }
 
-        clear.addEventListener('click', function () {
-            text.value = '';
+    function initData() {
+        data = JSON.parse(localStorage.getItem(dataLSKey));
+        if (data === null) {
+            data = [];
+        }
+    }
+
+    function initTodoList() {
+        data.forEach(function (t, number) {
+            createTodoItem(t, number);
         });
     }
 
-    function checkText() {
-        if (text.value.trim()) {
-            createTodoItem();
+    function clearTextListener() {
+        textField.value = emptyString;
+    }
+
+    function addTodoItemListener() {
+        var value = textField.value;
+        if (value.trim()) {
+            var index = data.push(value) - 1;
+            createTodoItem(value, index);
+            localStorage.setItem(dataLSKey, JSON.stringify(data));
         }
 
-        text.value = '';
+        textField.value = emptyString;
     }
 
-    function createTodoItem() {
-        var li = document.createElement('li');
-        var itemText = document.createTextNode(text.value);
-        var deleteBtn = document.createElement('button');
-        var glyph = document.createElement('span');
+    function createTodoItem(text, index) {
+        var li = document.createElement(elementNameLi);
+        var itemText = document.createTextNode(text);
+        var removeSpan = document.createElement(elementNameSpan);
 
-        glyph.setAttribute('class', 'glyphicon glyphicon-remove');
-
-        deleteBtn.appendChild(glyph);
-        deleteBtn.setAttribute('class', 'close');
-        deleteBtn.setAttribute('aria-label', 'Close');
-        deleteBtn.addEventListener('click', removeTodoItem.bind(null, li));
+        removeSpan.setAttribute(attributeNameClass, 'glyphicon glyphicon-remove pull-right');
+        removeSpan.isRemove = true;
+        removeSpan.index = index;
 
         li.appendChild(itemText);
-        li.appendChild(deleteBtn);
-        li.setAttribute('class', 'list-group-item');
+        li.appendChild(removeSpan);
+        li.setAttribute(attributeNameClass, 'list-group-item');
 
-        ul.appendChild(li);
+        todoList.appendChild(li);
     }
 
-    function removeTodoItem(li) {
-        ul.removeChild(li);
+    function removeTodoItemListener(event) {
+        var element = event.target;
+        if (element.isRemove) {
+            this.removeChild(element.parentNode);
+            data.splice(element.index, 1);
+            localStorage.setItem(dataLSKey, JSON.stringify(data));
+        }
     }
 
     return {
-        initControls: initControls
+        init: init
     };
 })();
